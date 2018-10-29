@@ -1,0 +1,132 @@
+extends layout
+
+block content
+    .head
+        .row
+            .col-12
+                .jumbotron.jumbotron-fluid.title
+                    .row(style="justify-content:flex-end;align-items:center;")
+                        i.fa.fa-user(style="font-size:24px") &nbsp;
+                        span#showname(style="font-size:24px;font-weight:600;margin-right:10px;")
+                        button.btn.btn-ghost#relogin 重新登录
+                    h1.display-4 dialog
+                    p.lead This is a fluently dialog , enjoy it !
+        div.col-sm-12
+            div.card
+                div.card-body
+                    h3.card-title dialog
+                    div#dialog(style="height: 400px;overflow-y: auto;")
+                        .alert.alert-warning
+                            .row.author
+                                a(href='javascript:;').alert-link tony：
+                            .row 
+                                .col-12.col-push-2 hello        
+    
+    div.footer
+        div.row
+            div.col-10
+                input.form-control#msg
+            div.col-2
+                button.btn.btn-secondary#send 发送
+    
+    .model.fade#modal
+        .modal-dialog(role="document" style="z-index:1050; position:absolute; top:0; left:0; right:0;")
+            .modal-content
+                .modal-header
+                    h5.modal-title 请登录
+                    button(
+                        type='button'
+                        class='close'
+                        data-dismiss='modal'
+                        aria-label='Close'
+                    )
+                        span(aria-hidden='true') &times;
+                .modal-body
+                    input.form-control#username(placeholder="请输入姓名")
+                .modal-footer
+                    button.btn.btn-secondary(data-dismiss="modal") 关闭
+                    button.btn.btn-primary#login 登录
+    script.
+        var socket = io.connect('http://localhost:3000');
+        
+        $(function(){
+            isLogin()
+        })
+        
+        //- 判断是否登录
+        function isLogin(){
+            var username = sessionStorage.getItem('username');
+            if(username){
+                login(username)
+            }else{
+                $('#modal').modal('show')
+            }
+        }
+
+        //- 登录
+        function login(username){
+            socket.emit('login', username)
+        }
+
+        $('#login').click(function(){
+            var username = $('#username').val().trim();
+            if(username!=''){
+                login(username);
+            }else{
+                alert('名字不能为空！')
+            }
+        })
+
+        $('#relogin').click(function(){
+            $('#modal').modal('show');
+        })
+
+        //- 发送消息
+        $('#send').click(function(){
+            var msg = $('#msg').val().trim();
+            if(msg){
+                var username = sessionStorage.getItem('username');
+                socket.emit('send-msg',{author: username,time: new Date(),content: msg})
+                $('#msg').val('')
+            }
+        })
+
+        socket.on('login-success',function(data){
+            $('#showname').text(data)
+            sessionStorage.setItem('username',data)
+            alert('登录成功！')
+            $('#modal').modal('hide');
+        })
+
+        socket.on('msg-init',function(array){
+            var username = sessionStorage.getItem('username');
+            var msg = '';
+            array.forEach(item=>{
+                if(item.author === username){
+                    msg += `<div class="alert alert-warning">
+                        <div class="row author">
+                        <a class="alert-link" href="javascript:;">${item.author}
+                        </a></div>
+                        <div class="row">
+                        <div class="col-12 col-push-2">${item.content}
+                        </div></div></div>`;
+                }else{
+                    msg += `<div class="alert alert-secondary">
+                        <div class="row author">
+                        <a class="alert-link" href="javascript:;">${item.author}
+                        </a></div>
+                        <div class="row">
+                        <div class="col-12 col-push-2">${item.content}
+                        </div></div></div>`;
+                }
+            })
+            $('#dialog').html(msg)
+            //- 滚动到最底部
+            $('#dialog')[0].scrollTop = $('#dialog')[0].scrollHeight;
+        })
+
+
+
+
+                
+    

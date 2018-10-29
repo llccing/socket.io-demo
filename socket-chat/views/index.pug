@@ -1,0 +1,43 @@
+extends layout
+
+block content
+  h1= title
+  p 欢迎使用（#{title}）
+  p 各种类型的消息推送
+  select#events
+    option(value="") 请选择
+    option(value="repaireFault") 修复故障总数--推送
+    option(value="roomInfo") 机房信息--推送
+  button#send 给服务端发送消息
+  button#reset 清空消息
+  div#msg
+
+
+  script.
+        var socket = io.connect('http://localhost:3000');
+        socket.on('news', function (data) {
+            var p = '<p>'+JSON.stringify(data)+'</p>'
+            $('#msg').append(p)
+        });
+
+        $('#send').click(function () {
+            let type = $('#events option:selected').val();
+            if(type===''){
+                return ;
+            }
+            socket.emit(type, { data: new Date() })
+        })
+
+        socket.on('resp-repaireFault',function(data){
+            var p = '<p>修复故障数，赋值，'+JSON.stringify(data)+'</p>'
+            $('#msg').append(p)
+        })
+
+        socket.on('resp-roomInfo',function(data){
+            var p = '<p>机房信息赋值，'+JSON.stringify(data)+'</p>'
+            $('#msg').append(p)
+        })
+
+        $('#reset').click(function(){
+            $('#msg').empty();
+        });
