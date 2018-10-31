@@ -15,55 +15,49 @@ io.on('connection', socket => {
   console.log('connection success')
 
   socket.on('login', user => {
-    console.log('login', user)
     login(socket, user)
-
-    socket.emit('loginSuccess', socket.id)
+    socket.emit('sendUserInfo', {
+      userinfo: {
+        username: user.username,
+        userid: socket.id,
+      },
+      userlist: numUsers,
+    })
   })
 
-  socket.on('online', user => {
-    console.log('online', user)
-    login(socket, user)
+  socket.on('chooseRole', user => {
+    numUsers.forEach(item => {
+      if (user.username === item.username) {
+        item.role = user.role;
+      }
+    })
+
+    socket.emit('sendUserInfo', {
+      userinfo: user,
+      userlist: numUsers,
+    })
   })
 
-  socket.on('getUserInfo', username => {
-    // numUsers.forEach(item => {
-    //   if (username === item.username) {
-    //     socket.emit('getUserInfoResp', item)
-    //   }
-    // })
-    console.log('server', username)
+  socket.on('logout', user => {
+    numUsers.forEach((item, idx) => {
+      if (item.username === user.username) {
+        numUsers.splice(idx, 1)
+      }
+    })
 
-    login(socket, { username: username, userid: socket.id })
-    
-    socket.emit('getUserInfoResp', { username: username, userid: socket.id })
-
+    socket.emit('sendUserInfo', {
+      userinfo: user,
+      userlist: numUsers,
+    })
   })
-
-
 })
 
 function login(socket, user) {
-  console.log(user)
-  if (user.userid) {
-    if (!isExit(user)) {
-      user.userid = socket.username
-      numUsers.push(user)
-    }
-  } else {
-    user.userid = user.userid
-    numUsers.push(user)
-  }
-  console.log(numUsers)
-}
-
-function isExit(user) {
-  let flag = false
-  numUsers.forEach(item => {
+  user.userid = socket.id
+  numUsers.forEach((item, idx) => {
     if (item.username === user.username) {
-      flag = true
+      numUsers.splice(idx, 1)
     }
   })
-
-  return flag
+  numUsers.push(user)
 }
