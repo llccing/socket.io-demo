@@ -36,9 +36,9 @@ let routerList = new Router({
 })
 
 routerList.beforeEach((to, from, next) => {
-  const username = sessionStorage.getItem('username')
-  
-  if (username) {
+  console.log(2, to)
+const userinfo = JSON.parse(sessionStorage.getItem('userinfo')  || "{}")
+  if (userinfo.username) {
     if (to.name === 'login') {
       next('/')
     } else {

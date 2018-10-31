@@ -59,14 +59,9 @@ export default {
     }
   },
   mounted(){
-    this.$socket.emit('online', {
-      username: '张三',
-      userid: null,
-    })
-
-    this.$socket.on('resOnline',resp =>{
-      console.log(resp)
-    })
+    let userinfo = JSON.parse(sessionStorage.getItem('userinfo')  || '{}');
+    userinfo.role = 'answer';
+    this.$socket.emit('chooseRole', userinfo)
   },
   methods: {
     answer() {

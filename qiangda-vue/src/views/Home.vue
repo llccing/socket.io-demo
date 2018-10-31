@@ -9,12 +9,12 @@
 export default {
   name: 'home',
   mounted() {
-    let username = sessionStorage.getItem('username')
-    console.log(username)
-    this.$socket.emit('getUserInfo', username)
-    this.$socket.on('getUserInfoResp', user => {
-      this.$store.commit('setYourInfo', user)
-    })
+    // let username = sessionStorage.getItem('username')
+    // console.log(username)
+    // this.$socket.emit('getUserInfo', username)
+    // this.$socket.on('getUserInfoResp', user => {
+    //   this.$store.commit('setYourInfo', user)
+    // })
   },
 }
 </script>

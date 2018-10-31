@@ -6,11 +6,30 @@ import router from './router'
 import store from './store'
 Vue.config.productionTip = false
 
-Vue.prototype.$axios = axios;
-Vue.prototype.$socket = io('http://localhost:3000');
-console.log(io)
+Vue.prototype.$axios = axios
+const socket = io('http://localhost:3000')
+Vue.prototype.$socket = socket
+
 new Vue({
   router,
   store,
-  render: h => h(App)
+  render: h => h(App),
+  created() {
+    const userinfo = JSON.parse(sessionStorage.getItem('userinfo') || '{}')
+
+    if (userinfo.username && userinfo.userid) {
+      socket.emit('login', userinfo)
+
+      socket.on('sendUserInfo', data => {
+        sessionStorage.setItem('userinfo', JSON.stringify(data.userinfo))
+        sessionStorage.setItem('userlist', JSON.stringify(data.userlist))
+
+        console.log(this.$store.commit('setInfo', data))
+      })
+    }
+  },
+  beforeDestroy() {
+    const userinfo = JSON.parse(sessionStorage.getItem('userinfo') || '{}')
+    socket.on('logout', userinfo)
+  }
 }).$mount('#app')

@@ -1,5 +1,6 @@
 <template>
   <div class="persons">
+    <p>当前在线人：</p>
     <div class="item-person" v-for="(item, idx) in persons" :key="idx">
       <div class="header"></div>
       {{item.username}}
@@ -9,9 +10,14 @@
 <script>
 export default {
   name: 'person-list',
-  props: {
-    persons: Array,
-  },
+  // props: {
+  //   persons: Array,
+  // },
+  computed:{
+    persons(){
+      return this.$store.state.userlist
+    }
+  }
 }
 </script>
 <style lang="scss">
@@ -23,7 +29,7 @@ export default {
     width: 20%;
     margin-top: 10px;
     .header {
-      width: 60%;
+      width: 40px;  
       margin: 0 auto;
       height: 40px;
       background-color: #45b7b7;

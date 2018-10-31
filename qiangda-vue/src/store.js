@@ -6,25 +6,12 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     yourData: {},
-    userList: [],
+    userlist: [],
   },
   mutations: {
-    setYourInfo(state, user) {
-      state.yourData = user
-      console.log(user)
-    },
-    setAllUser(state, users) {
-      state.userList = users
-    },
-    getUserInfo(state) {
-      let username = sessionStorage.getItem('username')
-      if (username) {
-        this._vm.$socket.emit('getUserInfo', username)
-        this._vm.$socket.on('getUserInfoResp', user => {
-          console.log(111, user)
-          state.yourData = user
-        })
-      }
+    setInfo(state, data) {
+      state.yourData = data.userinfo;
+      state.userlist = data.userlist;
     },
   },
   actions: {

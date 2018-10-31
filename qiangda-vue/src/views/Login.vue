@@ -21,18 +21,15 @@ export default {
       let username = this.username.trim()
       if (username) {
         this.msg = ''
-        sessionStorage.setItem('username', username)
         this.$socket.emit('login', {
           username: this.username,
           userid: null,
         })
-        this.$socket.on('loginSuccess', userid => {
-          this.$store.commit('setYourInfo', {
-            username: this.username,
-            userid: userid,
-          })
+        this.$socket.on('sendUserInfo', data => {
+          sessionStorage.setItem('userinfo', JSON.stringify(data.userinfo))
+          sessionStorage.setItem('userlist', JSON.stringify(data.userlist))
+          this.$router.replace('/')
         })
-        this.$router.replace('/')
       } else {
         this.msg = '请设置名字'
       }
