@@ -23,8 +23,6 @@ new Vue({
       socket.on('sendUserInfo', data => {
         sessionStorage.setItem('userinfo', JSON.stringify(data.userinfo))
         sessionStorage.setItem('userlist', JSON.stringify(data.userlist))
-
-        console.log(this.$store.commit('setInfo', data))
       })
     }
   },
