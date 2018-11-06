@@ -1,20 +1,21 @@
 <template>
   <div class="home">
     <router-link class="btn" to="/answer">我来抢答</router-link>
-
     <router-link class="btn yellow" to="/host">我来主持</router-link>
+
+    <router-view />
   </div>
 </template>
 <script>
 export default {
   name: 'home',
   mounted() {
-    // let username = sessionStorage.getItem('username')
-    // console.log(username)
-    // this.$socket.emit('getUserInfo', username)
-    // this.$socket.on('getUserInfoResp', user => {
-    //   this.$store.commit('setYourInfo', user)
-    // })
+    this.$socket.on('sendUserInfo', data => {
+      sessionStorage.setItem('userinfo', JSON.stringify(data.userinfo))
+      sessionStorage.setItem('userlist', JSON.stringify(data.userlist))
+
+      console.log('home page sendUserInfo', data)
+    })
   },
 }
 </script>

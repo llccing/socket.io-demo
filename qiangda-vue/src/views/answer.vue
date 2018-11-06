@@ -59,14 +59,16 @@ export default {
     }
   },
   mounted(){
-    let userinfo = JSON.parse(sessionStorage.getItem('userinfo')  || '{}');
-    userinfo.role = 'answer';
-    this.$socket.emit('chooseRole', userinfo)
+    // let userinfo = JSON.parse(sessionStorage.getItem('userinfo')  || '{}');
+    // userinfo.role = 'answer';
+    // this.$socket.emit('chooseRole', userinfo)
   },
   methods: {
     answer() {
-      console.log('answer')
-      this.$axios.get('/get')
+    const userinfo = JSON.parse(sessionStorage.getItem('userinfo') || '{}')
+
+      this.$socket.emit('answer', userinfo)
+
       this.$refs.message.show({
         message: '提示: 抢答成功！',
         type: 'success',

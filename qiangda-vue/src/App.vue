@@ -1,9 +1,6 @@
 <template>
   <div id="app">
     <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/login">login</router-link>
-
       <h1>来抢答</h1>
     </div>
     <router-view/>

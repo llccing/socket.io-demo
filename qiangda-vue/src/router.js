@@ -5,13 +5,25 @@ import Home from './views/Home.vue'
 Vue.use(Router)
 
 let routerList = new Router({
-  mode: 'history',
+  // mode: 'history',
   base: process.env.BASE_URL,
   routes: [
     {
       path: '/',
       name: 'home',
       component: Home,
+      children: [
+        {
+          path: 'answer',
+          name: 'answer',
+          component: () => import('./views/answer.vue'),
+        },
+        {
+          path: 'host',
+          name: 'host',
+          component: () => import('./views/host.vue'),
+        },
+      ]
     },
     {
       path: '/login',
@@ -22,33 +34,31 @@ let routerList = new Router({
       component: () => import(/* webpackChunkName: "login" */ './views/Login.vue'),
     },
     {
-      path: '/answer',
-      name: 'answer',
-      component: () => import('./views/answer.vue'),
+      path: '/404',
+      name: '404',
+      component: () => import('./views/404.vue'),
     },
-    ,
     {
-      path: '/host',
-      name: 'host',
-      component: () => import('./views/host.vue'),
+      path: '*',
+      redirect: '/404',
     },
   ],
 })
 
-routerList.beforeEach((to, from, next) => {
-  console.log(2, to)
-const userinfo = JSON.parse(sessionStorage.getItem('userinfo')  || "{}")
-  if (userinfo.username) {
-    if (to.name === 'login') {
-      next('/')
-    } else {
-      next()
-    }
-  } else if (to.name !== 'login') {
-    next('/login')
-  } else {
-    next()
-  }
-})
+// routerList.beforeEach((to, from, next) => {
+//   console.log(2, to)
+//   const userinfo = JSON.parse(sessionStorage.getItem('userinfo') || '{}')
+//   if (userinfo.username) {
+//     if (to.name === 'login') {
+//       next('/')
+//     } else {
+//       next()
+//     }
+//   } else if (to.name !== 'login') {
+//     next('/login')
+//   } else {
+//     next()
+//   }
+// })
 
 export default routerList

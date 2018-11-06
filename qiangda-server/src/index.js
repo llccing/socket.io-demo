@@ -50,6 +50,20 @@ io.on('connection', socket => {
       userlist: numUsers,
     })
   })
+
+
+  socket.on('answer', user => {
+
+    console.log('接收到抢答！');
+    // socket.broadcast.emit('sendUserInfo', {
+    //   userinfo: user,
+    //   userlist: numUsers,
+    // });
+    io.emit('sendUserInfo', {
+      userinfo: user,
+      userlist: numUsers,
+    });
+  })
 })
 
 function login(socket, user) {

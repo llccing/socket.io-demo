@@ -15,16 +15,11 @@ new Vue({
   store,
   render: h => h(App),
   created() {
-    const userinfo = JSON.parse(sessionStorage.getItem('userinfo') || '{}')
+    // const userinfo = JSON.parse(sessionStorage.getItem('userinfo') || '{}')
 
-    if (userinfo.username && userinfo.userid) {
-      socket.emit('login', userinfo)
-
-      socket.on('sendUserInfo', data => {
-        sessionStorage.setItem('userinfo', JSON.stringify(data.userinfo))
-        sessionStorage.setItem('userlist', JSON.stringify(data.userlist))
-      })
-    }
+    // if (userinfo.username && userinfo.userid) {
+    //   socket.emit('login', userinfo)
+    // }
   },
   beforeDestroy() {
     const userinfo = JSON.parse(sessionStorage.getItem('userinfo') || '{}')
