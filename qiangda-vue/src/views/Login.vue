@@ -25,9 +25,9 @@ export default {
           username: this.username,
           userid: null,
         })
-        this.$socket.on('sendUserInfo', data => {
-          sessionStorage.setItem('userinfo', JSON.stringify(data.userinfo))
-          sessionStorage.setItem('userlist', JSON.stringify(data.userlist))
+
+        this.$socket.on('login', userInfo => {
+          this.$store.commit('setUserInfo', userInfo)
           this.$router.replace('/')
         })
       } else {

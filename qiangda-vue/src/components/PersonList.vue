@@ -10,31 +10,23 @@
 <script>
 export default {
   name: 'person-list',
-  // props: {
-  //   persons: Array,
-  // },
-  computed:{
-    persons(){
+  computed: {
+    persons() {
       return this.$store.state.userlist
-    }
-  }
+    },
+  },
 }
 </script>
 <style lang="scss">
 .persons {
-  display: flex;
-  flex-wrap: wrap;
-
   .item-person {
-    width: 20%;
-    margin-top: 10px;
+    display: inline-block;
+    border: 1px solid #93e8e0;
+    padding: 8px 16px;
+    margin: 5px;
+    border-radius: 4px;
+
     .header {
-      width: 40px;  
-      margin: 0 auto;
-      height: 40px;
-      background-color: #45b7b7;
-      border-radius: 50%;
-      margin-bottom: 5px;
     }
   }
 }

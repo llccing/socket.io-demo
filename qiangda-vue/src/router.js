@@ -12,18 +12,16 @@ let routerList = new Router({
       path: '/',
       name: 'home',
       component: Home,
-      children: [
-        {
-          path: 'answer',
-          name: 'answer',
-          component: () => import('./views/answer.vue'),
-        },
-        {
-          path: 'host',
-          name: 'host',
-          component: () => import('./views/host.vue'),
-        },
-      ]
+    },
+    {
+      path: '/answer',
+      name: 'answer',
+      component: () => import('./views/answer.vue'),
+    },
+    {
+      path: '/host',
+      name: 'host',
+      component: () => import('./views/host.vue'),
     },
     {
       path: '/login',
@@ -45,20 +43,19 @@ let routerList = new Router({
   ],
 })
 
-// routerList.beforeEach((to, from, next) => {
-//   console.log(2, to)
-//   const userinfo = JSON.parse(sessionStorage.getItem('userinfo') || '{}')
-//   if (userinfo.username) {
-//     if (to.name === 'login') {
-//       next('/')
-//     } else {
-//       next()
-//     }
-//   } else if (to.name !== 'login') {
-//     next('/login')
-//   } else {
-//     next()
-//   }
-// })
+routerList.beforeEach((to, from, next) => {
+  const userinfo = JSON.parse(sessionStorage.getItem('userinfo') || '{}')
+  if (userinfo.username) {
+    if (to.name === 'login') {
+      next('/')
+    } else {
+      next()
+    }
+  } else if (to.name !== 'login') {
+    next('/login')
+  } else {
+    next()
+  }
+})
 
 export default routerList

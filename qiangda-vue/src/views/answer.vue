@@ -1,6 +1,6 @@
 <template>
   <div class="answer">
-    <person-list :persons="persons"></person-list>
+    <person-list></person-list>
 
     <Message ref="message" style="margin-top: 50px;"></Message>
 

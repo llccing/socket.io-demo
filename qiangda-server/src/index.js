@@ -12,23 +12,23 @@ server.listen(port, () => {
 var numUsers = []
 
 io.on('connection', socket => {
-  console.log('connection success')
+  console.log(numUsers)
 
   socket.on('login', user => {
     login(socket, user)
-    socket.emit('sendUserInfo', {
-      userinfo: {
-        username: user.username,
-        userid: socket.id,
-      },
-      userlist: numUsers,
+    
+    socket.emit('login', {
+      username: user.username,
+      userid: socket.id,
     })
+
+    io.emit('userlist', numUsers)
   })
 
   socket.on('chooseRole', user => {
     numUsers.forEach(item => {
       if (user.username === item.username) {
-        item.role = user.role;
+        item.role = user.role
       }
     })
 
@@ -39,22 +39,19 @@ io.on('connection', socket => {
   })
 
   socket.on('logout', user => {
+    console.log(0, user)
     numUsers.forEach((item, idx) => {
       if (item.username === user.username) {
         numUsers.splice(idx, 1)
       }
     })
 
-    socket.emit('sendUserInfo', {
-      userinfo: user,
-      userlist: numUsers,
-    })
+    console.log(1, numUsers)
+    socket.broadcast.emit('logout', numUsers)
   })
 
-
   socket.on('answer', user => {
-
-    console.log('接收到抢答！');
+    console.log('接收到抢答！')
     // socket.broadcast.emit('sendUserInfo', {
     //   userinfo: user,
     //   userlist: numUsers,
@@ -62,7 +59,13 @@ io.on('connection', socket => {
     io.emit('sendUserInfo', {
       userinfo: user,
       userlist: numUsers,
-    });
+    })
+  })
+
+
+  socket.on('startGame', () => {
+    console.log('startGame')
+    io.emit('startGame')
   })
 })
 
